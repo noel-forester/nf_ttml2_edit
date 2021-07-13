@@ -7,4 +7,4 @@ need ImageMagick(identify and convert command)
 ./sub_png_edit.sh *width* *height*
 or only exec
 ./sub_png_edit.sh
-to question width and eight in script
+to question width and height in script
