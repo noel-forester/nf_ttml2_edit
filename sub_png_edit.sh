@@ -49,6 +49,8 @@ else
 	i=1
 fi
 
+echo "add clealance for png"
+
 #xmlを一行づつ読んで画像処理
 grep "<div begin" manifest_ttml2.xml  | sed 's/.*tts:extent=".*" .*"\([1-9].*\)".*/\1/'| sed 's/px//g' | while read line ; do
 
