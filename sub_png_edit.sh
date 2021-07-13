@@ -3,8 +3,16 @@
 all=`grep "<div begin" manifest_ttml2.xml | wc -l `
 
 #動画解像度入力
-read -p "Video Width:" Width
-read -p "Video Height:" Height
+Width=$1
+Height=$2
+#引数に動画幅と高さの設定が無い場合
+if [ -z "$Width" ] ; then
+	read -p "Video Width:" Width
+fi
+
+if [ -z "$Height" ] ; then
+	read -p "Video Height:" Height
+fi	
 #比較用変数
 WH=`echo "${Width}${Height}"`
 #ループ用変数
@@ -75,6 +83,8 @@ convert ${i}.png -background none -gravity northwest -splice ${Ladd}x${Tadd} ${i
 i=$(( i + 1 ))
 
 done
+
+echo ""
 # w(1920) h(1080) px(672) py(152) ox(624) oy(820)
 # Ladd=ox Tadd=oy Radd=w-px-ox Badd=h-py-oy
 # 624		820		624			 108
