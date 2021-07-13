@@ -1,4 +1,10 @@
 # nf_ttml2_edit
 it's edit png files in netflix ttml2 subtitle.
 
-it's must need ImageMagick(identify and convert command)
+need ImageMagick(identify and convert command)
+
+# Usage
+./sub_png_edit.sh *width* *height*
+or only exec
+./sub_png_edit.sh
+to question width and eight in script
