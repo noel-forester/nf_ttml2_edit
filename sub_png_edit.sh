@@ -1,4 +1,5 @@
 #! /bin/bash
+all=`grep "<div begin" manifest_ttml.xml` | wc-l
 read -p "Width:" Width
 read -p "Height:" Height
 i=1
@@ -16,7 +17,8 @@ Tadd=$oy
 Radd=$(( Width - px - ox ))
 Badd=$(( Height - py -oy ))
 
-echo "Width $Width Height $Height px $px py $py ox $ox oy $oy Ladd $Ladd Tadd $Tadd Radd $Radd Badd $Badd"
+#echo "Width $Width Height $Height px $px py $py ox $ox oy $oy Ladd $Ladd Tadd $Tadd Radd $Radd Badd $Badd"
+printf "\r%s" "${i}/${all}"
 
 convert ${i}.png -background none -gravity southeast -splice ${Radd}x${Badd} ${i}.png
 convert ${i}.png -background none -gravity northwest -splice ${Ladd}x${Tadd} ${i}.png
