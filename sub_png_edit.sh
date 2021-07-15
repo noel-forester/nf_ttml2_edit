@@ -1,6 +1,6 @@
 #! /bin/bash
 #処理経過表示用変数
-all=`grep "<div" manifest_ttml2.xml | wc -l `
+all=`grep "<.*div " manifest_ttml2.xml | wc -l `
 
 #動画解像度入力
 Width=$1
@@ -23,10 +23,18 @@ WH=`echo "${Width}${Height}"`
 i=1
 
 #xmlで定義された画面解像度
-extentx=`grep "<tt" manifest_ttml2.xml | sed 's/.*extent="\(.*\)px".*/\1/' | sed s/px// | cut -d " " -f 1`
-extenty=`grep "<tt" manifest_ttml2.xml | sed 's/.*extent="\(.*\)px".*/\1/' | sed s/px// | cut -d " " -f 2`
+extentx=`grep "<.*tt " manifest_ttml2.xml | sed 's/.*extent="\(.*\)px".*/\1/' | sed s/px// | cut -d " " -f 1`
+extenty=`grep "<.*tt " manifest_ttml2.xml | sed 's/.*extent="\(.*\)px".*/\1/' | sed s/px// | cut -d " " -f 2`
 #比較用変数
 extentxy=`echo "${extentx}${extenty}"`
+
+#pngファイル名取得
+pngname=()
+for pngs in `ls -v *.png` ; do
+	pngname[$i]=$pngs
+	i=$((i+1))
+done
+i=1
 
 #動画とxmlで解像度が違う場合あらかじめpngの大きさ調整(比率が小さいほうに合わせる)
 if [ ${WH} = ${extentxy} ] ; then
@@ -48,11 +56,12 @@ else
 	#pngの解像度を調整
 	for i in `seq 1 ${all}` ;do
 		printf "\r%s" "${i}/${all}"
-		convert "${i}.png" -geometry "${scaling}%" "${i}.png"
+		convert "${pngname[$i]}" -geometry "${scaling}%" "${pngname[$i]}"
 	done
 	i=1
 fi
 
+echo ""
 echo "add clealance for png"
 
 #xmlを一行づつ読んで画像処理
@@ -83,8 +92,8 @@ Badd=$(( $Height - $py - $oy ))
 printf "\r%s" "${i}/${all}"
 
 #画像編集
-convert ${i}.png -background none -gravity southeast -splice ${Radd}x${Badd} ${i}.png
-convert ${i}.png -background none -gravity northwest -splice ${Ladd}x${Tadd} ${i}.png
+convert ${pngname[$i]} -background none -gravity southeast -splice ${Radd}x${Badd} ${pngname[$i]}
+convert ${pngname[$i]} -background none -gravity northwest -splice ${Ladd}x${Tadd} ${pngname[$i]}
 
 i=$(( i + 1 ))
 
