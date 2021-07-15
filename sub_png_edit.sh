@@ -1,6 +1,6 @@
 #! /bin/bash
 #処理経過表示用変数
-all=`grep "<div begin" manifest_ttml2.xml | wc -l `
+all=`grep "<div" manifest_ttml2.xml | wc -l `
 
 #動画解像度入力
 Width=$1
@@ -13,6 +13,10 @@ fi
 if [ -z "$Height" ] ; then
 	read -p "Video Height:" Height
 fi	
+if [ -z "height" -a -z "$Width"  ] ; then
+	echo "you must input video resolution"
+	exit
+fi
 #比較用変数
 WH=`echo "${Width}${Height}"`
 #ループ用変数
@@ -40,7 +44,7 @@ else
 	else
 		scaling=${scaley}
 	fi
-	#echo ${scaling}
+	echo "scale is ${scaling}%"
 	#pngの解像度を調整
 	for i in `seq 1 ${all}` ;do
 		printf "\r%s" "${i}/${all}"
@@ -52,7 +56,7 @@ fi
 echo "add clealance for png"
 
 #xmlを一行づつ読んで画像処理
-grep "<div begin" manifest_ttml2.xml  | sed 's/.*tts:extent=".*" .*"\([1-9].*\)".*/\1/'| sed 's/px//g' | while read line ; do
+grep "<div" manifest_ttml2.xml | sed 's/.*origin="\([0-9]*\)px.\([0-9]*\).*/\1 \2/' | while read line ; do
 
 #pngのサイズ取得
 px=`identify -format "%[width]" ${i}.png`
