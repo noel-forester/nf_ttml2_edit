@@ -65,11 +65,11 @@ echo ""
 echo "add clealance for png"
 
 #xmlを一行づつ読んで画像処理
-grep "<div" manifest_ttml2.xml | sed 's/.*origin="\([0-9]*\)px.\([0-9]*\).*/\1 \2/' | while read line ; do
+grep "<.*div " manifest_ttml2.xml | sed 's/.*origin="\([0-9]*\)px.\([0-9]*\).*/\1 \2/' | while read line ; do
 
 #pngのサイズ取得
-px=`identify -format "%[width]" ${i}.png`
-py=`identify -format "%[height]" ${i}.png`
+px=`identify -format "%[width]" ${pngname[$i]}`
+py=`identify -format "%[height]" ${pngname[$i]}`
 
 #配置位置を設定
 ox=`echo "$line" | cut -d " " -f 1`
