@@ -17,6 +17,9 @@ if [ -z "height" -a -z "$Width"  ] ; then
 	echo "you must input video resolution"
 	exit
 fi
+
+#実行ディレクトリ表示
+echo "cullent directory is `pwd`"
 #比較用変数
 WH=`echo "${Width}${Height}"`
 #ループ用変数
@@ -71,6 +74,15 @@ grep "<.*div " manifest_ttml2.xml | sed 's/.*origin="\([0-9]*\)px.\([0-9]*\).*/\
 px=`identify -format "%[width]" ${pngname[$i]}`
 py=`identify -format "%[height]" ${pngname[$i]}`
 
+#pngが縦字幕かどうか判定
+if [ $py -lt $px ] ; then
+	#進捗表示
+	printf "\r%s" "${i}/${all}"
+	#処理変数加算
+	i=$(( i + 1 ))
+	continue
+fi
+
 #配置位置を設定
 ox=`echo "$line" | cut -d " " -f 1`
 ox=`echo "scale=5;${ox}/${extentx}*$Width" | bc`
@@ -95,6 +107,7 @@ printf "\r%s" "${i}/${all}"
 convert ${pngname[$i]} -background none -gravity southeast -splice ${Radd}x${Badd} ${pngname[$i]}
 convert ${pngname[$i]} -background none -gravity northwest -splice ${Ladd}x${Tadd} ${pngname[$i]}
 
+#処理変数加算
 i=$(( i + 1 ))
 
 done
